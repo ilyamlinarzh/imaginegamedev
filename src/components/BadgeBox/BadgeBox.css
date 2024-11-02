@@ -1,0 +1,19 @@
+.badge_box {
+    display: flex;
+
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    
+    gap: 2px;
+    padding: 4px 8px;
+    border-radius: 8px;
+
+    background-color: var(--vkui--color_background_secondary);
+    color: var(--vkui--color_text_primary);
+
+    font-weight: 520;
+    font-size: 17px;
+    line-height: 129%;
+    letter-spacing: -0.02em;
+}

@@ -1,0 +1,28 @@
+
+.qr_container{
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.qr_box{
+    width: 40%;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 3px 4px 8px rgb(0, 0, 0, 0.1);
+}
+
+.qr_box > * {
+    width: 100%;
+    height: auto;
+    transform: translateY(2px);
+}
+
+.text--centered{
+    text-align: center;
+}
+
+.text--secondary{
+    color: var(--vkui--color_text_secondary)
+}

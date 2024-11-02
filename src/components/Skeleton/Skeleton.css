@@ -1,0 +1,21 @@
+
+.skeleton {
+    /* display: inline-block; */
+    border-radius: 10px;
+    width: 100%;
+}
+
+.skeleton--loader {
+    background: var(--container-skeleton--gradient);
+    background-size: 300% 300% ;
+    animation: shimmer 2.3s ease infinite
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 300% 0;
+    }
+    100% {
+        background-position: -300% 0;
+    }
+}

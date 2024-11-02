@@ -1,0 +1,32 @@
+.badge_avatar {
+    display: inline;
+    position: relative;
+}
+
+.badge_avatar__badge {
+    position: absolute;
+    right: -10%;
+    bottom: 0;
+
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+.badge_avatar__badge--gold {
+    background: radial-gradient(99.77% 99.77% at 262.02% 0%, rgb(255, 213, 79) 0%, rgb(255, 193, 5) 100%);
+    color: white;
+}
+
+.badge_avatar__badge--silver {
+    background: radial-gradient(98.38% 98.38% at 50% 1.62%, rgb(176, 190, 197) 0%, rgb(144, 164, 174) 100%);
+    color: white;
+}
+
+.badge_avatar__badge--bronze {
+    background: radial-gradient(94.97% 94.97% at 50% 3.12%, rgb(255, 167, 38) 0%, rgb(230, 128, 0) 100%);
+    color: white;
+}
+
+.badge_avatar__badge--default {
+    background: white;
+    color: black;
+}

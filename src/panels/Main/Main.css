@@ -1,0 +1,18 @@
+.room-cards__grid{
+    align-items: stretch;
+    /* align-content: stretch; */
+}
+
+
+.refreshing{
+    animation: loop-rotation 1s ease-in-out infinite;
+}
+
+@keyframes loop-rotation {
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}

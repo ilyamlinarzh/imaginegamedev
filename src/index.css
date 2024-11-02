@@ -1,0 +1,18 @@
+
+body {
+    transition: background-color 5s ease !important;
+}
+
+html {
+    --card-background--blue-gradient: var(--vkui--color_background_content);
+}
+
+html.vkui--vkIOS--light, html.vkui--vkCom--light, .vkui--vkBase--light {
+    --card-background--blue-gradient: linear-gradient(180deg, var(--vkui--color_background_content) 50%, rgba(38, 136, 235, 0.24) 100%);
+    --container-skeleton--gradient: linear-gradient(270deg, #EBEDF0, #ffffff, #EBEDF0);
+}
+
+html.vkui--vkIOS--dark, html.vkui--vkCom--dark, .vkui--vkBase--dark {
+    --card-background--blue-gradient: linear-gradient(180deg, var(--vkui--color_background_content) 50%, rgba(107, 107, 121, 0.24) 100%);
+    --container-skeleton--gradient: linear-gradient(270deg, #272727, #19191A, #272727);
+}

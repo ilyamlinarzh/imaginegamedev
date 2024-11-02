@@ -1,0 +1,16 @@
+.card_grid{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    gap: 8px;
+    padding: 8px 0;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card_grid > * {
+    box-sizing: border-box;
+    flex: 0 0 calc(33.33% - 8px);
+}

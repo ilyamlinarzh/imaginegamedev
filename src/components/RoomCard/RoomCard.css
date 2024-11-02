@@ -1,0 +1,32 @@
+
+
+.room_card__container{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    /* align-items: center; */
+}
+
+.room_card__buttonbox{
+    padding: 12px;
+}
+
+.room_card__stackbox{
+    padding: 12px;
+}
+
+.room_card__container--empty{
+    height: 100%;
+    min-height: 214px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+}
+
+.room_card--empty{
+    align-self: stretch;
+}

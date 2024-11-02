@@ -1,0 +1,34 @@
+.scroll_card__container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    gap: 8px;
+    padding: 4px 12px;
+
+    overflow-x: scroll;
+    /* scrollbar-width: none; */
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* .scroll_card__container::-webkit-scrollbar {
+    display: none;
+} */
+
+.scroll_card__container--default, .scroll_card__container > * {
+    min-width: 110px;
+    min-height: 165px;
+}
+
+.scroll_card__container--ingame > * {
+    height: 20vh;
+    min-width: 0;
+    min-height: 0;
+    aspect-ratio: 110/165;
+    width: auto;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+}

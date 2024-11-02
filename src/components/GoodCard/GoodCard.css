@@ -1,0 +1,38 @@
+.goodcard{
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+
+    align-items: center;
+    align-content: center;
+
+    padding: 8px;
+
+    /* background-color: #c4b1e8; */
+    /* background-image: url(); */
+    background-repeat: no-repeat;
+    background-position: 80%;
+    background-size: cover;
+}
+
+.goodcard__title{
+    display: inline-flex;
+
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    /* gap: 2px; */
+
+    text-align: center;
+}
+
+.goodcard__action{
+    padding-top: 12px;
+}

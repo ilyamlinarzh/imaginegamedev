@@ -1,0 +1,25 @@
+.config-card__text-container{
+    display: flex;
+    flex-direction: column;
+
+    padding: 16px;
+    gap: 8px;
+
+    text-align: center;
+
+}
+
+.config-card__text--title{
+    color: var(--vkui--color_text_secondary)
+}
+
+.config-card__text--text{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 129%;
+    letter-spacing: -0.01em;
+}
+
+.config-card{
+    background: rgba(38, 136, 235, 0.08);
+}

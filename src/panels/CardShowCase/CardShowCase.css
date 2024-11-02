@@ -1,0 +1,40 @@
+.card-group__background{
+    background-size: 100% auto;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+}
+
+.card-group__blur-cover{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+    width: auto;
+    height: auto;
+
+    z-index: 0;
+    fill: rgba(249, 249, 249, 0.6);
+    backdrop-filter: blur(84px);
+
+    border-radius: inherit;
+}
+
+.card-group__cardcase{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
+    padding: 20px 0;
+    z-index: 999;
+}
+
+.card-group__cardcase > * {
+    width: 45%;
+    z-index: 999;
+
+    border-radius: 16px;
+    box-shadow: 0px 0px 80px 20px rgb(255 255 255 / 9%);
+}
