@@ -1,5 +1,8 @@
 import { RequestNewRoom } from "./api";
 
+export const defaultHeight = document.documentElement.clientHeight;
+export const defaultWidth = document.documentElement.clientWidth;
+
 export const RoomRefreshInterval = 5000;
 
 export const currentDate = new Date()

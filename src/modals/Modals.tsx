@@ -8,6 +8,7 @@ import { CreateCard } from "./CreateCard/CreateCard";
 import { PremiumInfo } from "./PremiumInfo/PremiumInfo";
 import { ShareRoom } from "./ShareRoom/ShareRoom";
 import { InputRoomId } from "./InputRoomId/InputRoomId";
+import { ConfirmBuy } from "./ConfirmBuy/ConfirmBuy";
 
 
 
@@ -29,6 +30,7 @@ export const Modals: FC = () => {
             <PremiumInfo id='premiuminfo' />
             <ShareRoom id='shareroom' />
             <InputRoomId id='inputroom' />
+            <ConfirmBuy id='confirmbuy' />
         </ModalRoot>
     )
 }

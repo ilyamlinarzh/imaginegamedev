@@ -14,9 +14,10 @@ import { End } from "./screens/End/End";
 interface ScreenProps {
     state?: string;
     manager: WSRoomRequestManager | null;
+    room_id?: string;
 }
 
-const Screen = ({state, manager}: ScreenProps): ReactNode => {
+const Screen = ({state, manager, room_id}: ScreenProps): ReactNode => {
     switch (state) {
         case 'lobby':
             return <Lobby manager={manager} />
@@ -27,7 +28,7 @@ const Screen = ({state, manager}: ScreenProps): ReactNode => {
         case 'poll':
             return <Game manager={manager} />
         case 'end':
-            return <End manager={manager} />
+            return <End manager={manager} room_id={room_id}/>
         default:
             return null
     }
@@ -112,7 +113,7 @@ export const GameRoom: FC<NavIdProps> = ({id}) => {
         id={id}
         mode={['lead_answer', 'players_answers', 'poll'].includes(roomConfig?.state!) ? 'card' : 'plain'}
         >
-            <Screen state={roomConfig?.state} manager={roomManager} />
+            <Screen state={roomConfig?.state} manager={roomManager} room_id={params?.room_id} />
         </Panel>
         </>
     )

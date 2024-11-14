@@ -67,7 +67,7 @@ export const CardShowCase: FC<NavIdProps> = ({id}) => {
                 >
                     <SimpleCell
                     before={<Icon28InfoCircleOutline color='var(--vkui--color_icon_secondary)' />}
-                    subtitle={`По запросу «${params.user_prompt}»`}
+                    subtitle={params.type == 'ai' && `По запросу «${params.user_prompt}»`}
                     multiline
                     >
                         {`Сгенерирована ${getDateValue(params.action_time)}`}

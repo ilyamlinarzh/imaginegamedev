@@ -2,7 +2,7 @@ import { Button, Cell, Group, List, MiniInfoCell, ModalCard, NavIdProps, RichCel
 import { FC } from "react";
 import { IconRating, IconRepStar } from "../../components/icons";
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router";
-import { Icon16StarCircleFillYellow, Icon20CoinsOutline, Icon20Users3Outline, Icon24Cards2Outline, Icon24RobotOutline, Icon24Users3Outline, Icon36CoinsStacks2Outline } from "@vkontakte/icons";
+import { Icon16StarCircleFillYellow, Icon20CoinsOutline, Icon20Users3Outline, Icon24Cards2Outline, Icon24RobotOutline, Icon24Users3Outline, Icon28LikeCircleFillRed, Icon36CoinsStacks2Outline } from "@vkontakte/icons";
 
 
 
@@ -26,7 +26,7 @@ export const PremiumInfo: FC<NavIdProps> = ({id}) => {
                 <SimpleCell
                 multiline
                 before={<Icon24RobotOutline/>}
-                subtitle='Премиум-игроки не видят рекламу в игре'
+                subtitle='Вы больше не будете видеть рекламу в приложении'
                 >
                     Никакой рекламы
                 </SimpleCell>
@@ -40,16 +40,16 @@ export const PremiumInfo: FC<NavIdProps> = ({id}) => {
                 <SimpleCell
                 multiline
                 before={<Icon36CoinsStacks2Outline width={24} height={24} />}
-                subtitle='Премиум-игроки получают в 2 раза больше монет после игры'
+                subtitle='Получайте в 3 раза больше монет после игры и генерируйте больше игровых карточек'
                 >
                     Больше монет
                 </SimpleCell>
                 <SimpleCell
                 multiline
-                before={<Icon24Cards2Outline/>}
-                subtitle='Премиум-игроки каждый день получают 25 бесплатных генераций'
+                before={<Icon28LikeCircleFillRed width={24} height={24}/>}
+                subtitle='Внесите свой вклад в поддержку проекта и получайте дополнительные секретные бонусы'
                 >
-                    Бесплатные генерации
+                    Поддержка проекта
                 </SimpleCell>
             </List>
             </Group>

@@ -78,11 +78,11 @@ export const CardsList: FC<NavIdProps> = ({id}) => {
         loadPage()
     }, [page])
 
-    useEffect(()=>{
-        if (user_key == 'me'){
-            setCards(meCards)
-        }
-    }, [])
+    // useEffect(()=>{
+    //     if (user_key == 'me'){
+    //         setCards(meCards)
+    //     }
+    // }, [])
 
     const handleScroll = () => {
         if (stopPagination) return;
@@ -108,6 +108,7 @@ export const CardsList: FC<NavIdProps> = ({id}) => {
         mode='card'
         >
             <PanelHeader
+            fixed
             before={<PanelHeaderBack onClick={goBack} />}
             >
                 Карты

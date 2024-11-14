@@ -24,11 +24,14 @@
 }
 
 .scroll_card__container--ingame > * {
-    height: 20vh;
-    min-width: 0;
-    min-height: 0;
     aspect-ratio: 110/165;
-    width: auto;
+    /* height: 20vh; */
+    width: 16%;
+    max-height: 30vh;
+    max-width: 100px;
+    min-width: 10vh;
+    min-height: 0;
+    /* width: auto; */
     box-sizing: border-box;
     flex: 0 0 auto;
 }

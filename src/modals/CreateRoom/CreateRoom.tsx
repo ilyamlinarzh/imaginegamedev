@@ -1,10 +1,13 @@
-import { Icon24Cancel, Icon24Dismiss } from "@vkontakte/icons";
+import { Icon24Cancel, Icon24Dismiss, Icon28CancelCircleOutline } from "@vkontakte/icons";
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router";
-import { Button, FormItem, Group, ModalPage, ModalPageHeader, NavIdProps, PanelHeaderButton, PanelHeaderClose, SegmentedControl, SegmentedControlValue, usePlatform } from "@vkontakte/vkui";
+import { Button, FormItem, Group, ModalPage, ModalPageHeader, NavIdProps, PanelHeaderButton, PanelHeaderClose, SegmentedControl, SegmentedControlValue, Snackbar, usePlatform } from "@vkontakte/vkui";
 import { FC, useState } from "react";
 import { useCustomRouteMethods } from "../../hooks/useCustomRouteMethods";
 import { api } from "../../api";
 import { players_count_values } from "../../consts";
+import { AxiosError } from "axios";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "../../storage";
 
 
 
@@ -13,6 +16,8 @@ export const CreateRoom: FC<NavIdProps> = ({id}) => {
     const platform = usePlatform()
     const navigator = useRouteNavigator()
     const navigator_ = useCustomRouteMethods()
+
+    const setSnack = useSetAtom(snackbarAtom);
 
     const [playersCountInput, setPlayersCountInput] = useState<SegmentedControlValue>('players-3')
     const [roomModeInput, setRoomModeInput] = useState<SegmentedControlValue>('public')
@@ -29,8 +34,25 @@ export const CreateRoom: FC<NavIdProps> = ({id}) => {
         const players_count = players_count_values[players_key]
         //@ts-ignore
         const room_id = await api.rooms_new({players_count, room_mode: roomModeInput, deck_mode: deckModeInput})
-        unblock()
-        navigator.replace(`/game/${room_id.data}`)
+        .catch((err: AxiosError<any>) => {
+            const message = err.response?.data?.message
+
+            unblock()
+            navigator.back()
+            setSnack(
+                <Snackbar
+                onClose={()=>setSnack(null)}
+                offsetY={50}
+                before={<Icon28CancelCircleOutline fill="var(--vkui--color_icon_negative)" />}
+                >
+                    {message || 'Пока нельзя создать комнату, попробуйте позже'}
+                </Snackbar>
+            )
+        })
+        if (room_id) {
+            unblock()
+            navigator.replace(`/game/${room_id.data}`)
+        }
     }
 
     const onChangePlayersCount = (value: SegmentedControlValue) => {
@@ -90,10 +112,10 @@ export const CreateRoom: FC<NavIdProps> = ({id}) => {
                         label: '6',
                         value: 'players-6',
                         },
-                        {
-                        label: '7',
-                        value: 'players-7',
-                        }
+                        // {
+                        // label: '7',
+                        // value: 'players-7',
+                        // }
                     ]}
                     />
                 </FormItem>

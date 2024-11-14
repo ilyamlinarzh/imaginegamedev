@@ -75,6 +75,7 @@ export const Lobby: FC<ILobbyProps> = ({manager}) => {
                     </Card>
                     <Card>
                         <Header
+                        multiline
                         aside={
                             <Link 
                             hasVisited={false}

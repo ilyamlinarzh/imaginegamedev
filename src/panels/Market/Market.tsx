@@ -74,8 +74,17 @@ export const Market: FC<NavIdProps> = ({id}) => {
             setMe((current)=>{
                 if (!current) return current;
 
-                return {...current, premium: result.data!, balance: Math.max(current.balance-150, 0)}
+                return {...current, premium: true, balance: Math.max(current.balance-150, 0)}
             })
+            setSnack(
+                <Snackbar
+                onClose={()=>setSnack(null)}
+                offsetY={50}
+                before={<Icon28CheckCircleOutline fill="var(--vkui--color_icon_positive)" />}
+                >
+                    Теперь вы премиум-игрок
+                </Snackbar>
+            )
         }
         unblock()
     }
@@ -107,7 +116,7 @@ export const Market: FC<NavIdProps> = ({id}) => {
                     setMe((current)=>{
                         if (!current) return current;
         
-                        return {...current, premium: 9999999999}
+                        return {...current, premium: true}
                     })
                     setSnack(
                         <Snackbar
@@ -126,6 +135,7 @@ export const Market: FC<NavIdProps> = ({id}) => {
     return(
         <Panel
         mode='card'
+        id={id}
         >
             <PanelHeader>Магазин</PanelHeader>
             <Group
@@ -148,6 +158,7 @@ export const Market: FC<NavIdProps> = ({id}) => {
                     />
                 </CardGrid>
                 }
+                {!me?.premium &&
                 <Div>
                     <Banner
                     size='m'
@@ -180,7 +191,9 @@ export const Market: FC<NavIdProps> = ({id}) => {
                     }
                     />
                 </Div>
+                }
             </Group>
+            {!me?.premium &&
             <Group
             mode='card'
             header={
@@ -232,7 +245,7 @@ export const Market: FC<NavIdProps> = ({id}) => {
                     stretched size='s' 
                     mode='outline' 
                     appearance='overlay'
-                    onClick={buyWeekPremium}
+                    onClick={()=>navigate.push('/market/buy/premium')}
                     >
                     Купить
                     </Button>
@@ -242,6 +255,7 @@ export const Market: FC<NavIdProps> = ({id}) => {
                     />
                 </CardScroll>
             </Group>
+            }
             <Group
             mode='card'
             header={
@@ -260,7 +274,7 @@ export const Market: FC<NavIdProps> = ({id}) => {
                         size='s' 
                         mode='outline' 
                         appearance='overlay'
-                        onClick={()=>buyGenerations(5, 10)}
+                        onClick={()=>navigate.push('/market/buy/coins_5')}
                         >
                             Купить
                         </Button>
@@ -277,7 +291,7 @@ export const Market: FC<NavIdProps> = ({id}) => {
                         size='s' 
                         mode='outline' 
                         appearance='overlay'
-                        onClick={()=>buyGenerations(10, 20)}
+                        onClick={()=>navigate.push('/market/buy/coins_10')}
                         >
                             Купить
                         </Button>
@@ -294,7 +308,7 @@ export const Market: FC<NavIdProps> = ({id}) => {
                         size='s' 
                         mode='outline' 
                         appearance='overlay'
-                        onClick={()=>buyGenerations(20, 30)}
+                        onClick={()=>navigate.push('/market/buy/coins_20')}
                         >
                             Купить
                         </Button>
@@ -311,7 +325,7 @@ export const Market: FC<NavIdProps> = ({id}) => {
                         size='s' 
                         mode='outline' 
                         appearance='overlay'
-                        onClick={()=>buyGenerations(30, 40)}
+                        onClick={()=>navigate.push('/market/buy/coins_30')}
                         >
                             Купить
                         </Button>

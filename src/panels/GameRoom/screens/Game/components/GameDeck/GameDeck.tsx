@@ -63,7 +63,8 @@ export const GameDeck = ({
                     const selected = card_id == myChoices[1] && !result_mode;
                     const pollOrResult = state == 'poll' || (result_mode && state == 'lead_answer')
                     const answered = (!result_mode && user_id && actionUsersList.includes(user_id)) || user_id == lead || false;
-                    const canClick = state == 'poll' && card_id
+                    const meCard = card_id == myChoices[0]
+                    const canClick = state == 'poll' && card_id && !meCard
 
                     return(
                         <PlayCardOnDeck 
@@ -72,8 +73,9 @@ export const GameDeck = ({
                         selected={selected}
                         pollMode={pollOrResult}
                         answered={answered}
-                        player_avatar={user?.avatar}
+                        player_avatar={!meCard ? user?.avatar : me?.avatar}
                         image={image_url}
+                        me={meCard}
                         onClick={canClick ? ()=>onCardClick(card_id) : undefined}
                         />
                     )

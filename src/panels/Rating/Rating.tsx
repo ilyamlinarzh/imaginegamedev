@@ -61,25 +61,20 @@ export const Rating: FC<NavIdProps> = ({
                 style={{alignItems:'stretch'}}
                 >
                     {!load ?
-                        <>
                         <ResourcesCard 
                         name="очки рейтинга"
                         value={me.rating}
                         afterValue={<IconRating />}
                         actionName={`${mePlace} место`}
                         />
-                        <ResourcesCard 
-                        name="репутация"
-                        value={me.rep}
-                        afterValue={<IconRepStar />}
-                        // actionName="о репутации"
-                        />
-                        </>
+                        // {/* <ResourcesCard 
+                        // name="репутация"
+                        // value={me.rep}
+                        // afterValue={<IconRepStar />}
+                        // // actionName="о репутации"
+                        // /> */}
                     :
-                        <>
                         <Skeleton height={60} />
-                        <Skeleton height={60} />
-                        </>
                     }
                 </CardGrid>
             </Group>
@@ -124,7 +119,13 @@ export const Rating: FC<NavIdProps> = ({
                     }
                     </>
                 :
-                    <Div>
+                    <Div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap:10
+                    }}
+                    >
                     <Skeleton width='100%' height={50} />
                     <Skeleton width='100%' height={50} />
                     <Skeleton width='100%' height={50} />

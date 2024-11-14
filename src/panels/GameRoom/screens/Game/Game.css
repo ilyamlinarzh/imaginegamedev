@@ -10,7 +10,7 @@
 
     align-content: center;
 
-    height: 100dvh;
+    height: var(--view-height);
     overflow: hidden;
     box-sizing: border-box;
     /* touch-action: none; */
@@ -87,6 +87,34 @@
 
 .playtable--appearance {
     animation: appearance .25s ease-in-out forwards;
+}
+
+.playeravatar__container{
+    display: flex;
+    position: relative;
+    flex-direction: column;
+
+    align-items: center;
+    align-content: center;
+
+    margin-bottom: 10%;
+
+}
+
+.playeravatar__text{
+    position: absolute;
+    bottom: 0;
+
+    transform: translateY(50%);
+
+    background-color: #2688EB;
+    color: white;
+
+    border-radius: 4px;
+
+    padding: 2px 3px;
+
+    transition: opacity 700ms ease-in-out;
 }
 
 @keyframes appearance {

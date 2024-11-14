@@ -13,6 +13,8 @@ export interface RoomConfig {
     room_mode: string;
     deck_mode: 'default' | 'small';
     players: Partial<User<'other'>>[];
+    all_players: Partial<User<'other'>>[];
+    sequence: string[];
     players_max: 3 | 4 | 5 | 6 | 7;
     metadata?: MetaDataValues;
 }

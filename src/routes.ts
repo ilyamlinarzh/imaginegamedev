@@ -57,7 +57,8 @@ export const routes = RoutesConfig.create([
 
     createView(MARKET_VIEW, [
       createPanel(MARKET_VIEW_PANELS.MARKET, `/${MARKET_VIEW_PANELS.MARKET}`, [
-        createModal('premiuminfo', `/${MARKET_VIEW_PANELS.MARKET}/about_premium`)
+        createModal('premiuminfo', `/${MARKET_VIEW_PANELS.MARKET}/about_premium`),
+        createModal('confirmbuy', `/${MARKET_VIEW_PANELS.MARKET}/buy/:item`)
       ])
     ]),
 

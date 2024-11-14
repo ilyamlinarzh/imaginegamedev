@@ -55,6 +55,21 @@
     color: var(--vkui--color_text_secondary);
 }
 
+.play_card__playercover--meMark{
+    background-color: none;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    gap: 8px;
+    color: var(--vkui--color_text_secondary);
+
+    background-color: #bdd4ebbc;
+}
+
 .play_card__selectedcover{
     background-color: none;
     background: none;

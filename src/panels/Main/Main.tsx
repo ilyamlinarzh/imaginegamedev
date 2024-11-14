@@ -30,10 +30,9 @@ export const MainPanel: FC<NavIdProps> = ({id}) => {
     const [snack, setSnack] = useAtom(snackbarAtom)
 
     const joinByInvite = async () => {
-        navigate.push(`/input_room`)
         const canReadQR = await bridge.supportsAsync('VKWebAppOpenCodeReader')
         if (canReadQR){
-            await bridge.send('VKWebAppOpenQR')
+            await bridge.send('VKWebAppOpenCodeReader')
             .then((data)=>{
                 const result = data.code_data
                 if(result.startsWith('room:')){
@@ -124,13 +123,13 @@ export const MainPanel: FC<NavIdProps> = ({id}) => {
                     action={()=>navigate.push(`/${RATING_VIEW_PANELS.RATING}`)}
                     actionName="в рейтинг"
                     />
-                    <ResourcesCard 
+                    {/* <ResourcesCard 
                     name="репутация"
                     value={me.rep}
                     afterValue={<IconRepStar />}
                     action={()=>navigate.push('/about_rating')}
                     actionName="о репутации"
-                    />
+                    /> */}
                 </CardGrid>
             </Group>
 
@@ -172,7 +171,7 @@ export const MainPanel: FC<NavIdProps> = ({id}) => {
                             />
                         )
                     })}
-                    {rooms.length != 0 && <EmptyRoomCard onClick={()=>navigate.push('/create_room')} />}
+                    {(rooms.length > 0 && rooms.length < 10) && <EmptyRoomCard onClick={()=>navigate.push('/create_room')} />}
                 </CardGrid>
                 {rooms.length == 0 &&
                 <Placeholder
@@ -202,7 +201,8 @@ export const MainPanel: FC<NavIdProps> = ({id}) => {
                 <SimpleCell href="https://vk.com/imaginegame_pub" target='_blank' before={<Icon28LogoVkOutline />} expandable="always">Сообщество ВКонтакте</SimpleCell>
                 <SimpleCell href="https://vk.me/studio_326" target='_blank' before={<Icon28MessagesOutline />} expandable="always">Связаться с разработчиком</SimpleCell>
             </Group>
-            <Footer>v1.1dev</Footer>
-        </Panel>
+            <Footer>v1.5pr</Footer>
+            {snack}
+            </Panel>
     )
 }

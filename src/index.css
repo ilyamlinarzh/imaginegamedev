@@ -7,6 +7,10 @@ html {
     --card-background--blue-gradient: var(--vkui--color_background_content);
 }
 
+:root{
+    --view-height: 100dvh;
+}
+
 html.vkui--vkIOS--light, html.vkui--vkCom--light, .vkui--vkBase--light {
     --card-background--blue-gradient: linear-gradient(180deg, var(--vkui--color_background_content) 50%, rgba(38, 136, 235, 0.24) 100%);
     --container-skeleton--gradient: linear-gradient(270deg, #EBEDF0, #ffffff, #EBEDF0);

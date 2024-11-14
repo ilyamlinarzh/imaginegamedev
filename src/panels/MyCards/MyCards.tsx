@@ -20,7 +20,7 @@ import { AxiosError } from "axios";
 export const MyCards: FC<NavIdProps> = ({id}) => {
 
     const [me, setMe] = useAtom(userAtom);
-    const cards = useAtomValue(userCardsAtom);
+    const [cards, setMeCards] = useAtom(userCardsAtom);
     const defaultCards = useAtomValue(defaultCardsAtom)
     const [prompt, setPrompt] = useAtom(promptAtom)
 
@@ -32,9 +32,7 @@ export const MyCards: FC<NavIdProps> = ({id}) => {
     const [snack, setSnack] = useAtom(snackbarAtom)
 
     useEffect(()=>{
-        if(prompt === ''){
-            renewPrompt()
-        }
+        renewPrompt()
     }, [])
 
     const openCardsList = () => {
@@ -69,6 +67,9 @@ export const MyCards: FC<NavIdProps> = ({id}) => {
                     generations: current.generations - 1
                 }
             })
+            if(card.data?.card){
+                setMeCards((current)=>[card.data?.card!, ...current])
+            }
         })
         .catch((data: AxiosError<any>)=>{
             console.log(data)

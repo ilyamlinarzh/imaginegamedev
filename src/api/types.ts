@@ -18,7 +18,7 @@ export type User<T extends UserFieldsMode = 'other'> = {
     avatar: string;
     name: string;
     rating: number;
-    premium: number;
+    premium: boolean;
 
     /**
     В режиме "me" так же содержится:

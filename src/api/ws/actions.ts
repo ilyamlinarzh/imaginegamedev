@@ -3,7 +3,7 @@ import { loadImage } from "../../helpers";
 import { RoomConfig, RoomRating } from "../../storage/types";
 import { User } from "../types";
 import { ActionsHandler } from "./actionsHandler";
-import { clearActionUsersList, getMe, pushMyCards, pushPlayer, pushToActionUsersList, removeFromMyCards, removePlayer, setCurrentAssociation, setRating, updateFirstChoice, updateLead, updateMe,
+import { clearActionUsersList, getMe, pushAllPlayer, pushMyCards, pushPlayer, pushToActionUsersList, removeFromMyCards, removePlayer, setCurrentAssociation, setPlayersSequence, setRating, updateFirstChoice, updateLead, updateMe,
      updateMetadata,
      updateOrPushPlayer, updatePlayer, updateRoomConfig, updateRoomState, 
      updateSecondChoice} from "./storageMethods";
@@ -22,14 +22,17 @@ function get_game_data_action(data: GameDataAction) {
         room_mode: data.config.room_mode,
         deck_mode: data.config.deck_mode,
         players_max: data.config.players_count,
+        sequence: [],
         lead: data.lead!,
-        players: data.players
+        players: data.players,
+        all_players: data.players
     }
     updateRoomConfig(updatedConfig)
 }
 
 function tell_your_names_action(data: User<'other'>) {
     updateOrPushPlayer(data)
+    pushAllPlayer(data)
 }
 
 function player_connection_action(data: User<'other'>) {
@@ -37,6 +40,7 @@ function player_connection_action(data: User<'other'>) {
 
     if (data.user_id != me?.user_id){
         pushPlayer(data)
+        pushAllPlayer(data)
     }
 }
 
@@ -93,6 +97,7 @@ function new_cards_action(data: {card_ids: number[]}) {
 
 function autoremove_card_action(data: {card_id: number}) {
     removeFromMyCards(data.card_id)
+    updateFirstChoice(data.card_id)
 }
 
 
@@ -113,8 +118,8 @@ function answer_event_action(data: {user_id: string}) {
     pushToActionUsersList(data.user_id)
 }
 
-function get_sequence_action(data: {sequence: string[]}) {
-    ;
+function players_sequence_action(data: string[]) {
+    setPlayersSequence(data)
 }
 
 actions_handler.addMethods(
@@ -132,6 +137,7 @@ actions_handler.addMethods(
         ['player_answer_poll', player_answer_poll_action],
         ['player_answer', player_answer_action],
         ['lead_answer', player_answer_action],
-        ['answer_event', answer_event_action]
+        ['answer_event', answer_event_action],
+        ['players_sequence', players_sequence_action]
     ]
 )

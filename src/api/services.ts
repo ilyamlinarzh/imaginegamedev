@@ -92,3 +92,9 @@ export async function market_get_week_premium(): Promise_<number> {
     const response: AxiosResponse_<number> = await apiClient.get('/market/get_week_premium');
     return response.data;
 }
+
+
+export async function rooms_get_ad_bonus(room_id: string): Promise_<number> {
+    const response: AxiosResponse_<number> = await apiClient.get(`/rooms/${room_id}/get_ad_bonus`);
+    return response.data;
+}

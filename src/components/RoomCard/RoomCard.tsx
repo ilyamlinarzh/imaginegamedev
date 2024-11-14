@@ -24,7 +24,10 @@ export const RoomCard = ({
         <Card className="room_card">
             <div className="room_card__container">
                 <div className="room_card__stackbox">
-                    <UsersStack size='l' photos={[...avatars]} />
+                    {avatars.length > 0 ?
+                    <UsersStack size='l' photos={[...avatars]} /> :
+                    <UsersStack style={{opacity: 0.5}} size='l' photos={['', '', '']} />
+                    }
                 </div>
                 <List>
                     <MiniInfoCell

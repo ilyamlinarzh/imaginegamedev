@@ -23,6 +23,35 @@ export const pushPlayer = (player: Partial<User<'other'>>) => {
     })
 }
 
+
+export const pushAllPlayer = (player: Partial<User<'other'>>) => {
+    var updated = false;
+    store.set(roomConfigAtom, (current)=>{
+        if (!current) return current;
+
+        return {
+            ...current,
+            all_players: current.all_players.map(p=>{
+                if(p.user_id != player.user_id) return p;
+
+                updated = true;
+                return player;
+            })
+        }
+    })
+
+    if (!updated){
+        store.set(roomConfigAtom, (current)=>{
+            if (!current) return current;
+    
+            return {
+                ...current,
+                all_players: [...current.all_players, player]
+            }
+        })
+    }
+}
+
 export const updatePlayer = (player: Partial<User<'other'>>): boolean => {
     var updated = false;
     store.set(roomConfigAtom, (current)=>{
@@ -146,6 +175,14 @@ export const clearActionUsersList = () => {
 
 export const setCurrentAssociation = (value: string) => {
     store.set(roomCurrentAssociationAtom, value)
+}
+
+export const setPlayersSequence = (sequence: string[]) => {
+    store.set(roomConfigAtom, (current=>{
+        if (!current) return current
+
+        return {...current, sequence: sequence}
+    }))
 }
 
 

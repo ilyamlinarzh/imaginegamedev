@@ -1,18 +1,20 @@
-import { FC, useEffect, useState } from "react";
+import { FC, KeyboardEvent, KeyboardEventHandler, MouseEvent, useEffect, useState } from "react";
 import { WSRoomRequestManager } from "../../../../api/ws/requestManager";
 import { useAtomValue, useAtom } from "jotai";
 import { roomConfigAtom, roomCurrentAssociationAtom, roomMyCardsAtom, roomMyChoicesAtom, roomRatingAtom, roomUsersActionListAtom, userAtom } from "../../../../storage";
 import { PlayCard } from "../../../../components/Card/Card";
-import { Avatar, Div, Group, HorizontalCell, HorizontalScroll, PanelHeader, PanelHeaderButton, WriteBar, WriteBarIcon } from "@vkontakte/vkui";
+import { Avatar, Caption, Div, Group, HorizontalCell, HorizontalScroll, PanelHeader, PanelHeaderButton, WriteBar, WriteBarIcon } from "@vkontakte/vkui";
 import { ScrollCard } from "../../../../components/ScrollCard/ScrollCard";
 import { PartedProgressBar } from "../../../../components/PartedProgressBar/PartedProgressBar";
 import { ConfigCard } from "./components/ConfigCard/ConfigCard";
 import './Game.css'
 import { PlayCardOnDeck } from "../../../../components/Card/EmptyCard";
-import { game_times } from "../../../../consts";
+import { defaultHeight, defaultWidth, game_times } from "../../../../consts";
 import { Icon16DonateOultine } from "@vkontakte/icons";
 import { GameDeck } from "./components/GameDeck/GameDeck";
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router";
+import { useCustomRouteMethods } from "../../../../hooks/useCustomRouteMethods";
+import bridge from "@vkontakte/vk-bridge";
 
 
 const numedParts: {[key: string]: number} = {
@@ -32,6 +34,8 @@ export const Game: FC<IGameProps> = ({manager}) => {
     const myCards = useAtomValue(roomMyCardsAtom)
     const me = useAtomValue(userAtom)
 
+    const otherStorage = useCustomRouteMethods()
+
     const navigator = useRouteNavigator()
 
     const actionUsersList = useAtomValue(roomUsersActionListAtom)
@@ -46,7 +50,13 @@ export const Game: FC<IGameProps> = ({manager}) => {
 
     useEffect(()=>{
         const interval = setInterval(() => {
-            setTimer(current=>current+0.5)
+            setTimer(current=>{
+                const next = current+0.5
+                if (myChoices[0] != 0 && next >= 3 && roomConfig?.state == 'lead_answer'){
+                    setMyChoices(c=>[0, c[1]])
+                }
+                return next
+            })
         }, 500);
 
         setLeadChoice(0)
@@ -64,12 +74,19 @@ export const Game: FC<IGameProps> = ({manager}) => {
     }
 
     const answerCard = (card_id: number) => {
-
-        manager?.player_answer(card_id)
+        if (myChoices[0] == 0) {
+            manager?.player_answer(card_id)
+        }
     }
 
     const answerLead = () => {
         manager?.lead_answer(leadValue, leadChoice)
+    }
+
+    const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            answerLead();
+        }
     }
 
     const getConfigTitle = (): string => {
@@ -95,6 +112,32 @@ export const Game: FC<IGameProps> = ({manager}) => {
             else{ return association }
         }
     }
+
+    const setViewHeight = async () => {
+        var defH = defaultHeight
+        await bridge.send('VKWebAppCheckBannerAd').then((data)=>{
+            if(data.result){
+                console.log(data)
+                const dpBannerHeight = (defaultWidth*data.banner_height)/data.banner_width
+                defH = defaultHeight - dpBannerHeight
+            }else{
+                defH = defaultHeight
+            }
+        })
+        .catch((err)=>{
+            defH=defaultHeight
+        })
+        document.documentElement.style.setProperty('--view-height', `${defH}px`);
+    }
+
+    useEffect(()=>{
+        window.addEventListener('resize', setViewHeight);
+
+        return () => {
+            window.removeEventListener('resize', setViewHeight);
+            document.documentElement.style.setProperty('--view-height', `100dvh`);
+        }
+    }, [])
 
     const state = roomConfig?.state
     const result_mode = timer <= 3 && Boolean(roomConfig?.metadata)
@@ -123,7 +166,40 @@ export const Game: FC<IGameProps> = ({manager}) => {
                     showArrows
                     inline
                     >
-                        {roomConfig?.players.map((user)=>{
+                        {roomConfig?.sequence ?
+                        roomConfig.sequence.map((user_id)=>{
+                            const user = roomConfig.players.find(p=>p.user_id==user_id)
+                            if (!user) return null
+
+                            const name = user.name?.split(' ')[0]
+                            const player_points = user.user_id ? (roomRating[user.user_id] ? roomRating[user.user_id] : 0) : 0
+
+                            return(
+                                <HorizontalCell
+                                key={user.user_id}
+                                header={name}
+                                style={{whiteSpace: 'nowrap'}}
+                                subtitle={
+                                    <span className='score-container'>
+                                        {player_points}
+                                        <Icon16DonateOultine />
+                                    </span>
+                                }
+                                >   
+                                    <div className="playeravatar__container">
+                                        <Avatar size={44} src={user.avatar} />
+                                        <div 
+                                        style={{opacity: user.user_id == roomConfig.lead ? 1 : 0}}
+                                        className="playeravatar__text"
+                                        >
+                                            <Caption level='3' weight='2'>ВЕДУЩИЙ</Caption>
+                                        </div>
+                                    </div>
+                                </HorizontalCell>
+                            )
+                        })
+                        :
+                        roomConfig?.players.map((user)=>{
                             const name = user.name?.split(' ')[0]
                             const player_points = user.user_id ? (roomRating[user.user_id] ? roomRating[user.user_id] : 0) : 0
                             return(
@@ -171,13 +247,10 @@ export const Game: FC<IGameProps> = ({manager}) => {
                         />
                         {leadChoice != 0 && 
                         <WriteBar
-                        
-                        onChange={(e)=>setLeadValue(e.currentTarget.value)}
-                        after={
-                        <>
-                            <WriteBarIcon onClick={answerLead} mode="done" disabled={leadValue.length === 0} />
-                        </>
-                        }
+                        style={{ resize: 'none' }}
+                        maxLength={30}
+                        onChange={leadValue.length > 0 ? (e)=>setLeadValue(e.currentTarget.value) : undefined}
+                        onKeyDown={handleKeyDown}
                         placeholder="Введите свою ассоциацию"
                         />
                         }

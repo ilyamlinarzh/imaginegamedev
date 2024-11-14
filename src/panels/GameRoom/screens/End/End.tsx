@@ -1,41 +1,105 @@
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { WSRoomRequestManager } from "../../../../api/ws/requestManager";
-import { Avatar, Card, CardGrid, Group, Header, List, PanelHeader, PanelHeaderButton, Placeholder, SimpleCell } from "@vkontakte/vkui";
+import { Avatar, Button, Card, CardGrid, Group, Header, List, PanelHeader, PanelHeaderButton, Placeholder, SimpleCell } from "@vkontakte/vkui";
 import { IconRating } from "../../../../components/icons";
 import { IconCoin } from "../../../../components/icons/IconCoin/IconCoin";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { roomConfigAtom, roomRatingAtom, userAtom } from "../../../../storage";
-import { User } from "../../../../api";
-import { Icon20BrokenHeartOutline } from "@vkontakte/icons";
+import { api, User } from "../../../../api";
+import { Icon16VideoAdvertisement, Icon20BrokenHeartOutline, Icon20VideoOutline } from "@vkontakte/icons";
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router";
+import bridge, { EAdsFormats } from "@vkontakte/vk-bridge";
 
 
 interface IEndProps {
     manager: WSRoomRequestManager | null;
+    room_id?: string;
 }
 
 
-export const End: FC<IEndProps> = ({manager}) => {
+export const End: FC<IEndProps> = ({manager, room_id}) => {
 
     const roomConfig = useAtomValue(roomConfigAtom)
     const me = useAtomValue(userAtom)
     const roomRating = useAtomValue(roomRatingAtom)
 
+    const [canShowReward, setCanShowReward] = useState(false)
+    const [bonusAdWatched, setBonusAdWatched] = useState(false)
+
+    const setMe = useSetAtom(userAtom)
+
     const navigator = useRouteNavigator()
+
+    useEffect(()=>{
+
+        async function fetchData () {
+            await bridge.send('VKWebAppCheckNativeAds', {ad_format: EAdsFormats.REWARD, use_waterfall:false})
+            .then((data)=>{
+                if (data.result) {
+                    setCanShowReward(true)
+                }
+            })
+
+            bridge.send('VKWebAppCheckNativeAds', {ad_format: EAdsFormats.INTERSTITIAL, use_waterfall:false})
+        }
+
+        if (!bonusAdWatched){
+            fetchData()
+        }
+
+        return () => {
+            async function updateMe (){
+                const user = await api.users_me()
+                const {cards, ...userData} = user.data!
+                setMe(userData)
+            }
+
+            if(!bonusAdWatched){
+                bridge.send('VKWebAppShowNativeAds', {ad_format: EAdsFormats.INTERSTITIAL})
+                .then((data) => {
+                    if (data.result)
+                        console.log('Реклама показана');
+                    else {
+                        console.log('Ошибка при показе');
+                    }
+                })
+                .catch((error) => { console.log(error); /* Ошибка */ });
+            }
+
+            updateMe()
+        } // update user info (without cards-update)
+    }, [bonusAdWatched])
+
+    const watchAdBonus = async () => {
+        await bridge.send('VKWebAppShowNativeAds', {ad_format: EAdsFormats.REWARD})
+        .then(async (data) => {
+            if (data.result){
+                await api.rooms_get_ad_bonus(room_id!)
+                .then((data)=>{
+                    setBonusAdWatched(true)
+                })
+                .catch((err)=>{
+                    setBonusAdWatched(true)
+                    setCanShowReward(false)
+                })
+            }
+        })
+    }
 
     const rating_players = useMemo<(Partial<User<'other'>>)[] | null>(()=>{
         if (!roomConfig?.metadata) return null;
         //@ts-ignore
         return Object.entries(roomRating).sort((a: string, b: number)=>b[1]-a[1]).map(([user_id, rating])=>{
-            console.log(user_id)
-            const thisPlayer = roomConfig.players.find((u)=>u.user_id==user_id)
-            console.log(thisPlayer)
+            const thisPlayer = roomConfig.all_players.find((u)=>u.user_id==user_id)
             return {...thisPlayer, rating: rating}
         })
     }, [roomRating])
 
     const myRating = me?.user_id ? (roomRating[me.user_id] || 0): 0 
-    const myCoins = Math.floor(myRating/10)
+    const myCoins = Math.max(0, Math.floor(myRating/10)) * (me?.premium ? 3 : 1)
+    const adBonusCoins = Math.ceil(myCoins*0.5)
+    
+    const adBonusButton = !(me?.premium) && canShowReward && (adBonusCoins > 0) && !bonusAdWatched;
     return (
         <>
         <PanelHeader
@@ -66,12 +130,30 @@ export const End: FC<IEndProps> = ({manager}) => {
                         <SimpleCell 
                         before={<IconRating />}
                         >
-                            {`Очков в рейтинг: ${myRating >= 0 ? '+' : '-'} ${myRating}`}
+                            {`Очков в рейтинг: ${myRating > 0 ? '+' : ''}${(bonusAdWatched && canShowReward) ? myRating+adBonusCoins : myRating}`}
                         </SimpleCell>
                         <SimpleCell
                         before={<IconCoin />}
                         >
-                            {`Монет: + ${myCoins}`}
+                            <span
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                gap: 8,
+                                alignItems: 'center'
+                            }}
+                            >
+                            {`Монет: ${myRating > 0 ? '+' : ''}${myCoins}`}
+                            {adBonusButton &&
+                            <Button
+                            onClick={watchAdBonus}
+                            size='s'
+                            mode='secondary'
+                            before={<Icon16VideoAdvertisement />}
+                            >{`Получить бонус +${adBonusCoins}`}</Button>
+                            }
+                            </span>
                         </SimpleCell>
                     </List>
                 </Card>

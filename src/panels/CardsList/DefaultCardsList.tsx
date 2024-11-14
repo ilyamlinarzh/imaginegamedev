@@ -66,6 +66,7 @@ export const DefaultCardsList: FC<NavIdProps> = ({id}) => {
         mode='card'
         >
             <PanelHeader
+            fixed
             before={<PanelHeaderBack onClick={goBack} />}
             >
                 Карты

@@ -13,6 +13,7 @@ interface IPlayCardProps extends HTMLAttributes<HTMLDivElement> {
     selected?: boolean;
     lead_selected?: boolean;
     answered?: boolean;
+    me?: boolean;
     onClick?: () => void;
 }
 
@@ -38,8 +39,11 @@ export const PlayCardOnDeck = ({
     lead_selected = false,
     answered = false,
     pollMode = false,
+    me = false,
     onClick
 }: IPlayCardProps): ReactNode => {
+
+    const markAsMe = pollMode && me
 
     return(
         <Card
@@ -74,6 +78,14 @@ export const PlayCardOnDeck = ({
 
                     {answered && <Icon24DoneOutline className='accent-color' />}
                 </div>
+            </div>
+            }
+
+            {markAsMe &&
+            <div
+            className='play_card__hide-cover play_card__playercover--meMark'
+            >
+                <Avatar size={32} src={player_avatar} />
             </div>
             }
 

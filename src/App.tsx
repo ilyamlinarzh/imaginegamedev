@@ -30,6 +30,7 @@ export const App = () => {
   const setActivesRooms = useSetAtom(activeRoomsAtom);
   const setDefaultCards = useSetAtom(defaultCardsAtom)
 
+
   const platform = usePlatform();
   const { viewWidth } = useAdaptivityConditionalRender();
 
@@ -37,16 +38,23 @@ export const App = () => {
 
   useEffect(() => {
     async function fetchData() {
-      if (localStorage.getItem('onboarding') != '1'){
-        //@ts-ignore
-        bridge.send('VKWebAppShowSlidesSheet', {slides:onboarding_slides})
-        .then((data)=>{
-          if (data.result) {
-            localStorage.setItem('onboarding', '1')
+      await bridge.send('VKWebAppStorageGet', {keys: ['onboarding_test2']})
+      .then(async (data)=>{
+        if (data.keys) {
+          if (data.keys[0].value != '1') {
+            //@ts-ignore
+            await bridge.send('VKWebAppShowSlidesSheet', {slides:onboarding_slides})
+            .then((data)=>{
+              if (data.result) {
+                bridge.send('VKWebAppStorageSet', {key: 'onboarding_test2', value: '1'})
+              }
+            })
+            .catch((err)=>console.log(err))
           }
-        })
-        .catch((err)=>console.log(err))
-      }
+        }
+      })
+      .catch((err)=>console.log(err))
+
       const closeSpinner = showScreenSpinner()
       const user = await api.users_me()
       const {cards, ...userData} = user.data!
@@ -84,9 +92,9 @@ export const App = () => {
     center
     >
       <SplitCol width="66%" autoSpaced>
-        <Epic 
+        <Epic
         activeStory={activeView}
-        tabbar={(!desktopMode && showNavigationBar) && <Tabbar />}
+        tabbar={showNavigationBar && <Tabbar />}
         >
           <View id='main_view' activePanel={activePanel}>
             <MainPanel id="main" />
@@ -107,16 +115,6 @@ export const App = () => {
           </View>
         </Epic>
       </SplitCol>
-      {desktopMode && showNavigationBar &&
-        <SplitCol width="25%">
-          <Panel
-          mode='card'
-          >
-            {hasHeader && <PanelHeader />}
-            <DesktopTabbar />
-          </Panel>
-        </SplitCol>
-      }
     </SplitLayout>
   );
 };
